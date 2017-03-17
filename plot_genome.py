@@ -99,7 +99,7 @@ with PdfPages(args.ref_dir + str(name1)  + '_' + str(set)  +  '_' + str(set_ref)
 
 
 	for item in samples:
-		#initialise new page of pdf
+		#initialise new tab of pdf - one tab per sample
 		plt.clf()
 		plt.figure(figsize=(20,3))
 		B=[]
@@ -107,12 +107,12 @@ with PdfPages(args.ref_dir + str(name1)  + '_' + str(set)  +  '_' + str(set_ref)
 		chromEnd=[]
 		#load up raw data
 		lookUpTable2 = pickle.load(open(args.ref_dir + item + args.type,'rb'))
-		#initialise dicts to store data on markedBins(excluded) and blinds (no good reference bins found)
+		#initialise dicts to store data on markedBins(called bins with z -score > 3) and blinds (no good reference bins found so excluded from test) 
 		lookUpTable0=dict()
 		lookUpTable1=dict()
 		print(chromsToProcess)
 		length_total=0
-		#initialise arrays for each chromosome - do chromosomes separately to make sure we get some no of data points
+		#initialise arrays for each chromosome - do chromosomes separately to make sure we get same no of data points
 		#for each chr
 		for chrom in chromsToProcess:
 			lookUpTable0[str(chrom)]=[np.nan] * len(lookUpTable2[str(chrom)])
@@ -145,7 +145,7 @@ with PdfPages(args.ref_dir + str(name1)  + '_' + str(set)  +  '_' + str(set_ref)
 		A=[]
 		B=[]
 		C=[]
-		#now put all info in dicts to a continuous array-account for different types of data
+		#now put all info in dicts to a continuous array - handle different types of data
 		for chrom in chromsToProcess:
 			for bin in lookUpTable2[str(chrom)]:
 				if (type(bin) is int) or (type(bin) is float) or (type(bin) is np.float64):
