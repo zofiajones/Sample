@@ -1,6 +1,8 @@
-##FUNCTION: plot whole genome data for NIPT project
+##FUNCTION: plot whole genome data for NIPT project - put excluded and called bins in different colours for a visual snapshot of genome
 ##INPUT: reads files from specified results directory
 ##OUTPUT: a tabbed pdf file, one sample per tab, with a whole genome view of a specified quantity
+#Use pickle file as this is consistent with the file type used in the WiseCondor open source software
+#https://github.com/VUmcCGP/wisecondor
 import pickle
 import matplotlib
 matplotlib.use('Agg')
@@ -28,6 +30,9 @@ lst=os.listdir(args.ref_dir)
 #initialise genome array
 chromsToProcess=range(1,23)
 
+#I used file naming conventions to identify sample name, the test set the sample is from, the reference set the
+#sample is from and the statistic that is stored in the file.
+
 #convert file type to
 #name: for pdf file naming
 #label: to label axis
@@ -35,7 +40,7 @@ chromsToProcess=range(1,23)
 #Z-score per bin, template length (column 9 of bam file), GC corrected coverage, raw coverage (total, not mean), AS score(mean)
 files=['.zscore','_2_stats.pickle','.gcc','_ruh.pickle','_qual_stats.pickle']
 name=['z-score','length',,'gcc','coverage','quality']
-label=['Z Score','Frag Length','Lowess Weighting','GC corrected','Coverage','AS Score']
+label=['Z Score','Frag Length','GC corrected coverage','Coverage','AS Score']
 
 for item in files:
         if item in args.type:
@@ -72,6 +77,7 @@ samples=[]
 samples_ref=dict()
 print(name1,set,set_ref,ref)
 print(args.ref_dir + str(name1)  + '_' + str(set) + '_' +  str(set_ref)   + '_genome_marked.pdf')
+#Use info extracted from file name and directory name to name pdf file
 with PdfPages(args.ref_dir + str(name1)  + '_' + str(set)  +  '_' + str(set_ref)   +  '_genome_marked.pdf') as pdf:
 	#get raw data files with required suffix
 	for item in lst:
